@@ -2,7 +2,7 @@
 
 The First Stop for Prompt Engineeringing
 
-*coming soon*
+*this site is coming soon*
 
 
 ---------------------

@@ -1,4 +1,4 @@
-# [PromptPrompt](http://promptprompt.org)
+# [PromptPrompt.org](http://promptprompt.org)
 
 The First Stop for Prompt Engineeringing
 

@@ -1,4 +1,4 @@
-# Multi-Modal Collaborations
+# Multi-Model Collaborations
 
 > Because its all about setting the relevant context and asking the right questions.  Doing that across mutiple powerful models makes the outputs way better.
 

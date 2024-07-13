@@ -1,8 +1,6 @@
-# [PromptPrompt.org](http://promptprompt.org)
+# Multi-Modal Collaborations
 
-## Prompt Prompting
-
-> Because its all about setting the relevant context and asking the right questions.
+> Because its all about setting the relevant context and asking the right questions.  Doing that across mutiple powerful models makes the outputs way better.
 
 
 Hi, I'm Dazza Greenwood, of [CIVICS.com](https://www.civics.com) and [law.MIT.edu](https://law.mit.edu), among other things.  

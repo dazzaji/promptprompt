@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Prompt Outputs Comparison</title>
+  <style>
+    /* Basic styles for accordion */
+    body { font-family: sans-serif; margin: 2em; }
+    h1 { text-align: center; }
+    .accordion-item { border: 1px solid #ccc; border-radius: 4px; margin: 0.5em 0; }
+    .accordion-header { background: #f0f0f0; padding: 0.8em; cursor: pointer; 
+                         font-weight: bold; position: relative; }
+    .accordion-header::after { /* Add a "+" icon to closed and "−" to open */
+      content: '+'; position: absolute; right: 1em; 
+    }
+    .accordion-item.open .accordion-header::after {
+      content: '−';
+    }
+    .accordion-content { display: none; padding: 0.8em 1em; background: #fafafa; }
+    .accordion-item.open .accordion-content { display: block; }
+    .model-output { margin-bottom: 1em; }
+    .model-output h4 { margin: 0.5em 0 0.2em; }
+    .model-output p { margin: 0; }
+  </style>
+</head>
+<body>
+
+<h1>Prompts and Model Outputs</h1>
+
+<div id="accordion">
+  <div class="accordion-item">
+    <div class="accordion-header">Prompt 1: [Prompt text]</div>
+    <div class="accordion-content">
+      <div class="model-output"><h4>Model A:</h4><p>[Output from Model A]</p></div>
+      <div class="model-output"><h4>Model B:</h4><p>[Output from Model B]</p></div>
+      <div class="model-output"><h4>Model C:</h4><p>[Output from Model C]</p></div>
+      <div class="model-output"><h4>Model D:</h4><p>[Output from Model D]</p></div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <div class="accordion-header">Prompt 2: [Prompt text]</div>
+    <div class="accordion-content">
+      <div class="model-output"><h4>Model A:</h4><p>[Output from Model A]</p></div>
+      <div class="model-output"><h4>Model B:</h4><p>[Output from Model B]</p></div>
+      <div class="model-output"><h4>Model C:</h4><p>[Output from Model C]</p></div>
+      <div class="model-output"><h4>Model D:</h4><p>[Output from Model D]</p></div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <div class="accordion-header">Prompt 3: [Prompt text]</div>
+    <div class="accordion-content">
+      <div class="model-output"><h4>Model A:</h4><p>[Output from Model A]</p></div>
+      <div class="model-output"><h4>Model B:</h4><p>[Output from Model B]</p></div>
+      <div class="model-output"><h4>Model C:</h4><p>[Output from Model C]</p></div>
+      <div class="model-output"><h4>Model D:</h4><p>[Output from Model D]</p></div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <div class="accordion-header">Prompt 4: [Prompt text]</div>
+    <div class="accordion-content">
+      <div class="model-output"><h4>Model A:</h4><p>[Output from Model A]</p></div>
+      <div class="model-output"><h4>Model B:</h4><p>[Output from Model B]</p></div>
+      <div class="model-output"><h4>Model C:</h4><p>[Output from Model C]</p></div>
+      <div class="model-output"><h4>Model D:</h4><p>[Output from Model D]</p></div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <div class="accordion-header">Prompt 5: [Prompt text]</div>
+    <div class="accordion-content">
+      <div class="model-output"><h4>Model A:</h4><p>[Output from Model A]</p></div>
+      <div class="model-output"><h4>Model B:</h4><p>[Output from Model B]</p></div>
+      <div class="model-output"><h4>Model C:</h4><p>[Output from Model C]</p></div>
+      <div class="model-output"><h4>Model D:</h4><p>[Output from Model D]</p></div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <div class="accordion-header">Prompt 6: [Prompt text]</div>
+    <div class="accordion-content">
+      <div class="model-output"><h4>Model A:</h4><p>[Output from Model A]</p></div>
+      <div class="model-output"><h4>Model B:</h4><p>[Output from Model B]</p></div>
+      <div class="model-output"><h4>Model C:</h4><p>[Output from Model C]</p></div>
+      <div class="model-output"><h4>Model D:</h4><p>[Output from Model D]</p></div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <div class="accordion-header">Prompt 7: [Prompt text]</div>
+    <div class="accordion-content">
+      <div class="model-output"><h4>Model A:</h4><p>[Output from Model A]</p></div>
+      <div class="model-output"><h4>Model B:</h4><p>[Output from Model B]</p></div>
+      <div class="model-output"><h4>Model C:</h4><p>[Output from Model C]</p></div>
+      <div class="model-output"><h4>Model D:</h4><p>[Output from Model D]</p></div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <div class="accordion-header">Prompt 8: [Prompt text]</div>
+    <div class="accordion-content">
+      <div class="model-output"><h4>Model A:</h4><p>[Output from Model A]</p></div>
+      <div class="model-output"><h4>Model B:</h4><p>[Output from Model B]</p></div>
+      <div class="model-output"><h4>Model C:</h4><p>[Output from Model C]</p></div>
+      <div class="model-output"><h4>Model D:</h4><p>[Output from Model D]</p></div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <div class="accordion-header">Prompt 9: [Prompt text]</div>
+    <div class="accordion-content">
+      <div class="model-output"><h4>Model A:</h4><p>[Output from Model A]</p></div>
+      <div class="model-output"><h4>Model B:</h4><p>[Output from Model B]</p></div>
+      <div class="model-output"><h4>Model C:</h4><p>[Output from Model C]</p></div>
+      <div class="model-output"><h4>Model D:</h4><p>[Output from Model D]</p></div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <div class="accordion-header">Prompt 10: [Prompt text]</div>
+    <div class="accordion-content">
+      <div class="model-output"><h4>Model A:</h4><p>[Output from Model A]</p></div>
+      <div class="model-output"><h4>Model B:</h4><p>[Output from Model B]</p></div>
+      <div class="model-output"><h4>Model C:</h4><p>[Output from Model C]</p></div>
+      <div class="model-output"><h4>Model D:</h4><p>[Output from Model D]</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // JavaScript to handle accordion behavior
+  const accordionItems = document.querySelectorAll('.accordion-item');
+  accordionItems.forEach(item => {
+    item.querySelector('.accordion-header').onclick = () => {
+      const isOpen = item.classList.contains('open');
+      // Close all items first (to allow only one open at a time)
+      accordionItems.forEach(i => i.classList.remove('open'));
+      // If it was not open, open the clicked one
+      if (!isOpen) {
+        item.classList.add('open');
+      }
+    };
+  });
+</script>
+
+</body>
+</html>

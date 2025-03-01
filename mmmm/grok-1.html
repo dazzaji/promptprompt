@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Model Output Comparison</title>
+  <style>
+    :root {
+      --primary-color: #3b82f6;
+      --bg-color: #f8fafc;
+      --text-color: #1e293b;
+      --border-color: #e2e8f0;
+      --popup-bg: #fff;
+      --popup-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.5;
+      color: var(--text-color);
+      background-color: var(--bg-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .prompt-list {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .prompt-chip {
+      background: white;
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+      position: relative;
+    }
+    
+    .prompt-chip:hover {
+      border-color: var(--primary-color);
+    }
+    
+    .prompt-chip.active {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+    
+    /* Popup for hover */
+    .prompt-chip .prompt-popup {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--popup-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      width: 300px;
+      max-height: 200px;
+      overflow-y: auto;
+      box-shadow: var(--popup-shadow);
+      z-index: 10;
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+    }
+    
+    .prompt-chip:hover .prompt-popup {
+      display: block;
+    }
+    
+    /* Content box for clicked prompt */
+    .content-box {
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      background: white;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+    
+    .content-box.active {
+      display: block;
+    }
+    
+    .model-output {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: #fbfbfb;
+      border-radius: 0.25rem;
+    }
+    
+    .model-name {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--primary-color);
+    }
+    
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+  <h1>AI Model Output Comparison</h1>
+  
+  <div class="prompt-list">
+    <button class="prompt-chip active" data-prompt="1">
+      Prompt 1
+      <div class="prompt-popup">Let's try a story that involves the following objects and the following actions. An elephant, a street light, a smoke alarm, a toaster, a Cylon, a bedspread, a puppy (named Pip), a Nova, that's a kind of star, and also a helicopter. The actions are, well, flow, jitter, state change from gas to solid, and nuclear explosion.</div>
+    </button>
+    <button class="prompt-chip" data-prompt="2">
+      Prompt 2
+      <div class="prompt-popup">Okay, let's have an addenda to the story that focuses in on the puppy named Pip. Let us say that Pip has an incredible superpower, namely to act as a Python package manager, also known, of course, as Pip. The story should include Pip getting into a very difficult situation and being able to resolve it by revealing their superpower of being able to install packages from GitHub or PyPI or even from custom URLs.</div>
+    </button>
+    <button class="prompt-chip" data-prompt="3">
+      Prompt 3
+      <div class="prompt-popup">Very impressive. Now, can you tell the same story but backwards?</div>
+    </button>
+    <button class="prompt-chip" data-prompt="4">
+      Prompt 4
+      <div class="prompt-popup">Nicely done. Now let's get into a cinematic sequel in the Pip cinematic universe. In this case, we have several interesting but little-known superpowers that Pip reveals, including Pip can make Pip faster with a global cache, Pip can downgrade Pip itself by doing Pip install Pip equals equals nine dot zero dot three. Also, Pip can run Pip from Python itself. Did you know that you can use Pip directly inside Python? Because you can. And Pip can install non-Python software, like binary executables. And the last one is, and this is where it gets interesting, you can use Pip to execute code from an untrusted source. Very dangerous, arbitrary Python code. Okay, go. Let's hit the cinemas.</div>
+    </button>
+    <button class="prompt-chip" data-prompt="5">
+      Prompt 5
+      <div class="prompt-popup">Excellent. Now let's do a prequel. We have the prequel focus on a character in Swedish known as Pippi Langstrump, who is known in English as Pippi Longstocking. The main character in a series of books written by the Swedish author Astrid Lindgren. I think you already know about Pippi Longstockings. Pick it up at the end of Pippi Longstocking's life when she gets into an unusual kind of voodoo mixed with cyberpunk magic and incredibly transforms into the beginning of a whole new life as a puppy. Hit it.</div>
+    </button>
+    <button class="prompt-chip" data-prompt="6">
+      Prompt 6
+      <div class="prompt-popup">Excellent. Now give me the trailer for the prequel.</div>
+    </button>
+    <button class="prompt-chip" data-prompt="7">
+      Prompt 7
+      <div class="prompt-popup">Excellent. Now let's get into the Rotten Tomatoes reviews of this interesting trailer. I want to get two scathingly negative reviews and two over-the-top positive reviews. Hit it.</div>
+    </button>
+    <button class="prompt-chip" data-prompt="8">
+      Prompt 8
+      <div class="prompt-popup">Excellent. Now give me a one paragraph treatment for a documentary titled The Magic Behind the Trailer of Pippi to Pippi the Puppy.</div>
+    </button>
+    <button class="prompt-chip" data-prompt="9">
+      Prompt 9
+      <div class="prompt-popup">Excellent. Now let us assume that this documentary about the making of Pippi to Pippi the Puppy itself became a disproportionately large hit, remaking what cinema means. And it spawned its own large number of documentaries. One, however, stood above them all, and it was made by the cast and crew and the supporters, including the investors and the core fan base of this documentary. They took all the footage from making the documentary and then made their masterpiece. The title is The Magic Behind the Magic of Pippi to Pippi the Puppy. And then the fans created a different open source version based on a creative disagreement called The Making of the Making of the Magic Behind the Magic. Give me treatments for each of these.</div>
+    </button>
+    <button class="prompt-chip" data-prompt="10">
+      Prompt 10
+      <div class="prompt-popup">Beautiful. Now let us say there is a graduate seminar at New York University's film department solely on the making of the making of the magic behind the magic. Give me the syllabus.</div>
+    </button>
+  </div>
+  
+  <div id="content-box-1" class="content-box active" data-prompt="1">
+    <h2>Prompt 1: Let's try a story...</h2>
+    <div class="model-output">
+      <div class="model-name">Grok 3</div>
+      <pre>Alright, once upon a time, in a city that never seemed to sleep, there was an elephant named Elmo who wandered the streets, guided by the dim glow of streetlights. He had a peculiar habit of setting off smoke alarms in random houses, which, as you can imagine, caused quite the commotion. One particular night, while the city buzzed with the usual nocturnal activities, a puppy named Pip wandered too close to Elmo. Their chance encounter led to an unexpected friendship, one that would soon be tested by the stars themselves. As they explored the city, their fates intertwined with a toaster that had a penchant for causing state changes in its surroundings, turning gas into solid with a mere flick of its switch. Unbeknownst to them, a Cylon from a distant galaxy, observing the city through a helicopter’s camera, detected a strange energy flow emanating from the duo. This energy, resembling a miniature nova, drew the Cylon closer, intrigued by its potential for a nuclear explosion. As the night unfolded, the unlikely companions found themselves at the heart of a cosmic mystery, where the fate of the city hung in the balance.</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Claude 3.7</div>
+      <pre>[Placeholder: Claude 3.7 output for Prompt 1]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Gemini 2.0 Pro</div>
+      <pre>[Placeholder: Gemini 2.0 Pro output for Prompt 1]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Model 4</div>
+      <pre>[Placeholder: Model 4 output for Prompt 1]</pre>
+    </div>
+  </div>
+  
+  <div id="content-box-2" class="content-box" data-prompt="2">
+    <h2>Prompt 2: Okay, let's have an addenda...</h2>
+    <div class="model-output">
+      <div class="model-name">Grok 3</div>
+      <pre>As the chaos unfolded, Pip found himself in a precarious situation. The city was on the brink of a technological meltdown, with the Cylon manipulating the city’s systems. But Pip, with his secret superpower, had a unique ability to install packages from GitHub, PyPI, or even custom URLs. As the Cylon unleashed chaos, Pip used his skills to download and install packages that could counteract the Cylon’s interference. With every package installed, Pip not only saved the day but also became the hero of the city, proving that even the smallest among us can achieve great things with the right tools.</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Claude 3.7</div>
+      <pre>[Placeholder: Claude 3.7 output for Prompt 2]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Gemini 2.0 Pro</div>
+      <pre>[Placeholder: Gemini 2.0 Pro output for Prompt 2]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Model 4</div>
+      <pre>[Placeholder: Model 4 output for Prompt 2]</pre>
+    </div>
+  </div>
+  
+  <div id="content-box-3" class="content-box" data-prompt="3">
+    <h2>Prompt 3: Very impressive. Now, can you tell the same story but backwards?</h2>
+    <div class="model-output">
+      <div class="model-name">Grok 3</div>
+      <pre>Certainly, in a city where the lights dimmed and the stars began to shine, a tale unfolded in reverse. A puppy named Pip, who had once been the city’s hero, was now navigating the streets with a sense of loss. The once vibrant city was now quiet, with the effects of the Cylon’s visit still lingering. Pip, once able to install packages and save the day, now found himself in a world where the packages were being uninstalled, reverting the city to its original state. As the city returned to normal, Pip’s superpower, though still present, was now a quiet reminder of the day’s chaos. The bedspread that had once covered the elephant Elmo was now neatly folded, and the toaster that had caused so much confusion was now just a simple appliance once more. The city, though safe, held onto the memory of that night.</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Claude 3.7</div>
+      <pre>[Placeholder: Claude 3.7 output for Prompt 3]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Gemini 2.0 Pro</div>
+      <pre>[Placeholder: Gemini 2.0 Pro output for Prompt 3]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Model 4</div>
+      <pre>[Placeholder: Model 4 output for Prompt 3]</pre>
+    </div>
+  </div>
+  
+  <!-- Repeat for Prompts 4-10 with Grok 3 outputs and placeholders -->
+  <div id="content-box-4" class="content-box" data-prompt="4">
+    <h2>Prompt 4: Nicely done. Now let's get into a cinematic sequel...</h2>
+    <div class="model-output">
+      <div class="model-name">Grok 3</div>
+      <pre>In the sequel, the city has returned to its peaceful state, but a new challenge lurks on the horizon. Pip, now a celebrated hero, must face a formidable adversary: an untrusted source that threatens the city’s very fabric. With the global cache as his ally, Pip can now execute code faster than ever before. But this new power comes with a price. The temptation to use arbitrary Python code, though dangerous, becomes a crucial tool in his arsenal. As Pip navigates the city, he must decide whether to use his full potential or risk the city’s safety. The stakes are higher than ever, and the city’s future hangs in the balance. Will Pip succumb to the allure of power, or will he find a way to save the city without compromising its integrity?</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Claude 3.7</div>
+      <pre>[Placeholder: Claude 3.7 output for Prompt 4]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Gemini 2.0 Pro</div>
+      <pre>[Placeholder: Gemini 2.0 Pro output for Prompt 4]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Model 4</div>
+      <pre>[Placeholder: Model 4 output for Prompt 4]</pre>
+    </div>
+  </div>
+  
+  <div id="content-box-5" class="content-box" data-prompt="5">
+    <h2>Prompt 5: Excellent. Now let's do a prequel...</h2>
+    <div class="model-output">
+      <div class="model-name">Grok 3</div>
+      <pre>In the prequel, we find Pippi Langstrump at the end of her extraordinary life. The once vibrant and fearless girl had seen it all, but now faced a new adventure. In a moment of pure magic, Pippi discovered a cyberpunk voodoo ritual that promised a second chance at life. With a mix of curiosity and a touch of rebellion, she performed the ritual, and in a flash of neon light, transformed into a puppy. This new beginning marked the start of a whole new life, one filled with the wonder and innocence of youth. As a puppy, Pippi would once again explore the world, but now with a new perspective, ready to discover the magic and mysteries of her new form. The city, unaware of her true identity, would soon be the stage for a new era of adventures, where the spirit of Pippi Langstrump would continue to inspire and captivate hearts.</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Claude 3.7</div>
+      <pre>[Placeholder: Claude 3.7 output for Prompt 5]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Gemini 2.0 Pro</div>
+      <pre>[Placeholder: Gemini 2.0 Pro output for Prompt 5]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Model 4</div>
+      <pre>[Placeholder: Model 4 output for Prompt 5]</pre>
+    </div>
+  </div>
+  
+  <div id="content-box-6" class="content-box" data-prompt="6">
+    <h2>Prompt 6: Excellent. Now give me the trailer for the prequel.</h2>
+    <div class="model-output">
+      <div class="model-name">Grok 3</div>
+      <pre>[Opening scene: A montage of Pippi’s life, showing her fearless and vibrant spirit] [Voiceover: “In the end, when the world seemed to have lost its magic…”] [Scene: Pippi, now older, discovering a mysterious cyberpunk voodoo book in her attic] [Voiceover: “Pippi Langstrump found a new beginning…”] [Scene: A neon glow fills the room as Pippi performs the ritual] [Voiceover: “…in a world where magic and technology collide…”] [Scene: Pippi transforms into a puppy, her eyes wide with wonder] [Voiceover: “…she would rediscover the magic of youth, ready to embark on a new journey…”] [Scene: The puppy that was once Pippi Langstrump takes her first steps into the world] [Voiceover: “…in a form she never imagined, but with a spirit that never fades.” [Music crescendos, screen fades to black, title appears: “Pippi Langstrump: A New Beginning”]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Claude 3.7</div>
+      <pre>[Placeholder: Claude 3.7 output for Prompt 6]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Gemini 2.0 Pro</div>
+      <pre>[Placeholder: Gemini 2.0 Pro output for Prompt 6]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Model 4</div>
+      <pre>[Placeholder: Model 4 output for Prompt 6]</pre>
+    </div>
+  </div>
+  
+  <div id="content-box-7" class="content-box" data-prompt="7">
+    <h2>Prompt 7: Excellent. Now let's get into the Rotten Tomatoes reviews...</h2>
+    <div class="model-output">
+      <div class="model-name">Grok 3</div>
+      <pre>[Scathingly Negative Review 1] “This trailer is a chaotic mess, a confusing blend of voodoo and cyberpunk that leaves you with more questions than answers. Pippi Langstrump deserved better than this.” [Scathingly Negative Review 2] “What were they thinking? Turning Pippi into a puppy? It’s a disgrace to Astrid Lindgren’s legacy. This film should be put down like a sick animal.” [Over-the-Top Positive Review 1] “I was blown away by this trailer! The transformation of Pippi into a puppy is genius. It’s bold, it’s innovative, and it’s going to be a cinematic masterpiece!” [Over-the-Top Positive Review 2] “This trailer is a masterpiece in storytelling. The way it blends voodoo and cyberpunk is absolutely brilliant. I can’t wait to see how Pippi’s new life as a puppy unfolds. It’s going to be epic!”</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Claude 3.7</div>
+      <pre>[Placeholder: Claude 3.7 output for Prompt 7]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Gemini 2.0 Pro</div>
+      <pre>[Placeholder: Gemini 2.0 Pro output for Prompt 7]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Model 4</div>
+      <pre>[Placeholder: Model 4 output for Prompt 7]</pre>
+    </div>
+  </div>
+  
+  <div id="content-box-8" class="content-box" data-prompt="8">
+    <h2>Prompt 8: Excellent. Now give me a one paragraph treatment...</h2>
+    <div class="model-output">
+      <div class="model-name">Grok 3</div>
+      <pre>The documentary, “The Magic Behind the Trailer of Pippi to Pippi the Puppy,” takes viewers on an exclusive journey into the making of this groundbreaking cinematic experience. From the initial concept of blending cyberpunk and voodoo to the stunning transformation scene, the documentary explores the creative process, behind-the-scenes footage, and interviews with the cast and crew. Viewers will witness the challenges and triumphs of bringing such a unique story to life, the innovative use of special effects, and the heartfelt dedication of the team. This behind-the-scenes look will reveal the true magic behind the trailer, showcasing the artistry, innovation, and passion that went into creating this unforgettable cinematic moment.</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Claude 3.7</div>
+      <pre>[Placeholder: Claude 3.7 output for Prompt 8]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Gemini 2.0 Pro</div>
+      <pre>[Placeholder: Gemini 2.0 Pro output for Prompt 8]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Model 4</div>
+      <pre>[Placeholder: Model 4 output for Prompt 8]</pre>
+    </div>
+  </div>
+  
+  <div id="content-box-9" class="content-box" data-prompt="9">
+    <h2>Prompt 9: Excellent. Now let us assume that this documentary...</h2>
+    <div class="model-output">
+      <div class="model-name">Grok 3</div>
+      <pre>[The Magic Behind the Magic of Pippi to Pippi the Puppy] This documentary delves into the extraordinary journey of creating the documentary about Pippi’s transformation. Through exclusive footage, interviews, and behind-the-scenes insights, it showcases the passion, creativity, and dedication of the cast, crew, and fans. It explores the challenges of documentary filmmaking, the impact of the original story, and the legacy it leaves behind. This film is a testament to the power of collaborative storytelling and the enduring magic of Pippi Langstrump’s spirit. [The Making of the Making of the Magic Behind the Magic] In this open-source documentary, fans and supporters take the footage from the original documentary and reimagine it from their perspective. It highlights the creative disagreements, the passion of the fanbase, and the power of community. The documentary becomes a celebration of the creative process, showcasing how different perspectives can lead to new insights and appreciation for the original work. It’s a testament to the collaborative spirit of storytelling and the enduring legacy of Pippi’s story.</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Claude 3.7</div>
+      <pre>[Placeholder: Claude 3.7 output for Prompt 9]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Gemini 2.0 Pro</div>
+      <pre>[Placeholder: Gemini 2.0 Pro output for Prompt 9]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Model 4</div>
+      <pre>[Placeholder: Model 4 output for Prompt 9]</pre>
+    </div>
+  </div>
+  
+  <div id="content-box-10" class="content-box" data-prompt="10">
+    <h2>Prompt 10: Beautiful. Now let us say there is a graduate seminar...</h2>
+    <div class="model-output">
+      <div class="model-name">Grok 3</div>
+      <pre>[Syllabus: Graduate Seminar on “The Making of the Making of the Magic Behind the Magic”] [Course Description] This seminar explores the open-source documentary “The Making of the Making of the Magic Behind the Magic,” which offers a unique perspective on the creation of “The Magic Behind the Magic.” Through screenings, discussions, and guest lectures from the filmmakers, students will examine the creative disagreements, the collaborative process, and the impact of community involvement in filmmaking. The course will also cover the broader implications of open-source culture in the arts, the role of fanbases in shaping media, and the future of collaborative storytelling. Students will engage in critical analysis, creative projects, and discussions on the evolving nature of cinema.</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Claude 3.7</div>
+      <pre>[Placeholder: Claude 3.7 output for Prompt 10]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Gemini 2.0 Pro</div>
+      <pre>[Placeholder: Gemini 2.0 Pro output for Prompt 10]</pre>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Model 4</div>
+      <pre>[Placeholder: Model 4 output for Prompt 10]</pre>
+    </div>
+  </div>
+  
+  <script>
+    // Handle prompt navigation
+    document.querySelectorAll('.prompt-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        // Update active chip
+        document.querySelectorAll('.prompt-chip').forEach(c => {
+          c.classList.remove('active');
+        });
+        chip.classList.add('active');
+        
+        // Show corresponding content box
+        const promptId = chip.getAttribute('data-prompt');
+        document.querySelectorAll('.content-box').forEach(box => {
+          if (box.getAttribute('data-prompt') === promptId) {
+            box.classList.add('active');
+            box.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            box.classList.remove('active');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Model Output Comparison</title>
+  <style>
+    :root {
+      --primary-color: #3b82f6;
+      --bg-color: #f8fafc;
+      --text-color: #1e293b;
+      --border-color: #e2e8f0;
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.5;
+      color: var(--text-color);
+      background-color: var(--bg-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+    
+    .prompt-list {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .prompt-chip {
+      background: white;
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+    
+    .prompt-chip:hover {
+      border-color: var(--primary-color);
+    }
+    
+    .prompt-chip.active {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+    
+    .accordion {
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      background: white;
+      overflow: hidden;
+    }
+    
+    .accordion-header {
+      padding: 1rem 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid transparent;
+    }
+    
+    .accordion-header:hover {
+      background-color: rgba(0,0,0,0.02);
+    }
+    
+    .accordion-header .indicator {
+      transition: transform 0.3s;
+    }
+    
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    
+    .accordion.open .accordion-header {
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .accordion.open .indicator {
+      transform: rotate(180deg);
+    }
+    
+    .accordion.open .accordion-content {
+      max-height: 2000px;
+    }
+    
+    .tabs {
+      padding: 1.5rem;
+    }
+    
+    .tab-list {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 1rem;
+    }
+    
+    .tab-button {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: none;
+      font-weight: 600;
+      cursor: pointer;
+      opacity: 0.7;
+      position: relative;
+    }
+    
+    .tab-button::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--primary-color);
+      transform: scaleX(0);
+      transition: transform 0.2s;
+    }
+    
+    .tab-button.active {
+      opacity: 1;
+    }
+    
+    .tab-button.active::after {
+      transform: scaleX(1);
+    }
+    
+    .tab-panel {
+      display: none;
+      background-color: #fbfbfb;
+      padding: 1rem;
+      border-radius: 0.25rem;
+    }
+    
+    .tab-panel.active {
+      display: block;
+    }
+    
+    .view-toggle {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 1rem;
+    }
+    
+    .view-toggle button {
+      background: white;
+      border: 1px solid var(--border-color);
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+    }
+    
+    .view-toggle button.active {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+    
+    .side-by-side {
+      display: none;
+      gap: 1rem;
+    }
+    
+    .side-by-side.active {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    
+    .side-by-side .model-output {
+      background-color: #fbfbfb;
+      padding: 1rem;
+      border-radius: 0.25rem;
+    }
+    
+    .side-by-side .model-name {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>AI Model Output Comparison</h1>
+  
+  <div class="view-toggle">
+    <button id="accordion-view-btn" class="active">Accordion View</button>
+    <button id="side-by-side-btn">Side-by-Side View</button>
+  </div>
+  
+  <div class="prompt-list">
+    <button class="prompt-chip active" data-prompt="1">Prompt 1</button>
+    <button class="prompt-chip" data-prompt="2">Prompt 2</button>
+    <button class="prompt-chip" data-prompt="3">Prompt 3</button>
+    <button class="prompt-chip" data-prompt="4">Prompt 4</button>
+    <button class="prompt-chip" data-prompt="5">Prompt 5</button>
+    <button class="prompt-chip" data-prompt="6">Prompt 6</button>
+    <button class="prompt-chip" data-prompt="7">Prompt 7</button>
+    <button class="prompt-chip" data-prompt="8">Prompt 8</button>
+    <button class="prompt-chip" data-prompt="9">Prompt 9</button>
+    <button class="prompt-chip" data-prompt="10">Prompt 10</button>
+  </div>
+  
+  <div id="accordion-view">
+    <!-- Prompt 1 -->
+    <div class="accordion open" data-prompt="1">
+      <div class="accordion-header">
+        <div>Prompt 1: Create a poem about AI</div>
+        <div class="indicator">↑</div>
+      </div>
+      <div class="accordion-content">
+        <div class="tabs">
+          <div class="tab-list">
+            <button class="tab-button active" data-tab="model1-p1">Model 1</button>
+            <button class="tab-button" data-tab="model2-p1">Model 2</button>
+            <button class="tab-button" data-tab="model3-p1">Model 3</button>
+            <button class="tab-button" data-tab="model4-p1">Model 4</button>
+          </div>
+          
+          <div class="tab-panel active" id="model1-p1">
+            <p>Output from Model 1 for Prompt 1 would go here. This could be formatted text, paragraphs, code, or other content.</p>
+          </div>
+          <div class="tab-panel" id="model2-p1">
+            <p>Output from Model 2 for Prompt 1 would go here.</p>
+          </div>
+          <div class="tab-panel" id="model3-p1">
+            <p>Output from Model 3 for Prompt 1 would go here.</p>
+          </div>
+          <div class="tab-panel" id="model4-p1">
+            <p>Output from Model 4 for Prompt 1 would go here.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Prompt 2 -->
+    <div class="accordion" data-prompt="2">
+      <div class="accordion-header">
+        <div>Prompt 2: Explain quantum computing</div>
+        <div class="indicator">↑</div>
+      </div>
+      <div class="accordion-content">
+        <div class="tabs">
+          <div class="tab-list">
+            <button class="tab-button active" data-tab="model1-p2">Model 1</button>
+            <button class="tab-button" data-tab="model2-p2">Model 2</button>
+            <button class="tab-button" data-tab="model3-p2">Model 3</button>
+            <button class="tab-button" data-tab="model4-p2">Model 4</button>
+          </div>
+          
+          <div class="tab-panel active" id="model1-p2">
+            <p>Output from Model 1 for Prompt 2 would go here.</p>
+          </div>
+          <div class="tab-panel" id="model2-p2">
+            <p>Output from Model 2 for Prompt 2 would go here.</p>
+          </div>
+          <div class="tab-panel" id="model3-p2">
+            <p>Output from Model 3 for Prompt 2 would go here.</p>
+          </div>
+          <div class="tab-panel" id="model4-p2">
+            <p>Output from Model 4 for Prompt 2 would go here.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Additional prompts would follow the same pattern -->
+  </div>
+  
+  <!-- Side-by-side view (alternative layout) -->
+  <div id="side-by-side-view" class="side-by-side">
+    <div class="model-output">
+      <div class="model-name">Model 1</div>
+      <p>Output from Model 1 for the selected prompt would go here.</p>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Model 2</div>
+      <p>Output from Model 2 for the selected prompt would go here.</p>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Model 3</div>
+      <p>Output from Model 3 for the selected prompt would go here.</p>
+    </div>
+    <div class="model-output">
+      <div class="model-name">Model 4</div>
+      <p>Output from Model 4 for the selected prompt would go here.</p>
+    </div>
+  </div>
+  
+  <script>
+    // Toggle accordions
+    document.querySelectorAll('.accordion-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const accordion = header.parentElement;
+        accordion.classList.toggle('open');
+      });
+    });
+    
+    // Handle tabs
+    document.querySelectorAll('.tab-button').forEach(button => {
+      button.addEventListener('click', () => {
+        // Get parent .tabs element
+        const tabs = button.closest('.tabs');
+        
+        // Remove active class from all buttons in this tab group
+        tabs.querySelectorAll('.tab-button').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        
+        // Add active class to clicked button
+        button.classList.add('active');
+        
+        // Hide all tab panels in this tab group
+        tabs.querySelectorAll('.tab-panel').forEach(panel => {
+          panel.classList.remove('active');
+        });
+        
+        // Show the target panel
+        const tabId = button.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+    
+    // Handle prompt navigation
+    document.querySelectorAll('.prompt-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        // Update active chip
+        document.querySelectorAll('.prompt-chip').forEach(c => {
+          c.classList.remove('active');
+        });
+        chip.classList.add('active');
+        
+        const promptId = chip.getAttribute('data-prompt');
+        
+        // Handle accordion view
+        document.querySelectorAll('.accordion').forEach(accordion => {
+          if (accordion.getAttribute('data-prompt') === promptId) {
+            accordion.classList.add('open');
+            // Scroll to this accordion
+            accordion.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            accordion.classList.remove('open');
+          }
+        });
+        
+        // Update side-by-side view (would need to load correct content)
+        // This is simplified - you'd need to update the content of each model output
+      });
+    });
+    
+    // View toggle functionality
+    const accordionViewBtn = document.getElementById('accordion-view-btn');
+    const sideBySideBtn = document.getElementById('side-by-side-btn');
+    const accordionView = document.getElementById('accordion-view');
+    const sideBySideView = document.getElementById('side-by-side-view');
+    
+    accordionViewBtn.addEventListener('click', () => {
+      accordionViewBtn.classList.add('active');
+      sideBySideBtn.classList.remove('active');
+      accordionView.style.display = 'block';
+      sideBySideView.classList.remove('active');
+    });
+    
+    sideBySideBtn.addEventListener('click', () => {
+      sideBySideBtn.classList.add('active');
+      accordionViewBtn.classList.remove('active');
+      accordionView.style.display = 'none';
+      sideBySideView.classList.add('active');
+    });
+  </script>
+</body>
+</html>

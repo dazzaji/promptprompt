@@ -217,8 +217,8 @@
   <h1>AI Model Output Comparison</h1>
 
   <div class="view-toggle">
-    <button id="accordion-view-btn" class="active">Accordion View</button>
-    <button id="side-by-side-btn">Side-by-Side View</button>
+    <button id="accordion-view-btn" class="active">Selector View</button>
+    <button id="side-by-side-btn">Stack View</button>
   </div>
 
   <div class="prompt-list" id="prompt-list">
@@ -291,16 +291,15 @@
 
 
       // 2. Create Accordion and Side-by-Side Content (but don't display yet)
-        function renderPromptContent(promptData) {
-            // Clear previous content
-            accordionViewDiv.innerHTML = '';
-            sideBySideViewDiv.innerHTML = '';
-
+    function renderPromptContent(promptData) {
+        // Clear previous content
+        accordionViewDiv.innerHTML = '';
+        sideBySideViewDiv.innerHTML = '';
 
         const accordion = createElement('div', { 'class': 'accordion', 'data-prompt-id': promptData.prompt_id });
         const accordionHeader = createElement('div', { 'class': 'accordion-header' });
         const headerText = createElement('div', {}, `Prompt ${promptData.prompt_id.replace('prompt-', '')}: ${promptData.prompt_text}`);
-        const indicator = createElement('div', { 'class': 'indicator' }, '↓');
+        const indicator = createElement('div', { 'class': 'indicator' }, '↓'); // Changed to down arrow
 
         accordionHeader.appendChild(headerText);
         accordionHeader.appendChild(indicator);
@@ -316,7 +315,6 @@
         tabs.appendChild(tabPanels);
         accordion.appendChild(accordionContent);
         accordionViewDiv.appendChild(accordion); // Add to the accordion view
-
 
         // Create tabs and side-by-side content
         promptData.responses.forEach(response => {
@@ -338,8 +336,6 @@
           tabPanel.innerHTML = `<p>${response.response_text.replace(/\n/g, '<br>')}</p>`;
           tabPanels.appendChild(tabPanel); // Add to the tabPanels container
 
-
-
           // Side-by-side content
           const sideBySideOutput = createElement('div', { 'class': 'model-output' });
           const modelNameDiv = createElement('div', { 'class': 'model-name' }, modelName);
@@ -351,35 +347,36 @@
           sideBySideViewDiv.appendChild(sideBySideOutput);
         });
 
-            // Event listeners for tabs (within the renderPromptContent function)
-            tabList.querySelectorAll('.tab-button').forEach(button => {
-                button.addEventListener('click', () => {
-                  // Deactivate all buttons and panels within the *current* accordion
-                  tabList.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-                  tabPanels.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+        // Event listeners for tabs (within the renderPromptContent function)
+        tabList.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+              // Deactivate all buttons and panels within the *current* accordion
+              tabList.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+              tabPanels.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
 
-                  // Activate the clicked button and corresponding panel
-                  button.classList.add('active');
-                  document.getElementById(button.dataset.tab).classList.add('active');
-                });
-              });
-
-            // Set the first tab as active by default.
-            const firstTab = tabList.querySelector('.tab-button');
-            if (firstTab) {
-                firstTab.click();
-            }
-
-            // Event listener for accordion header
-            accordionHeader.addEventListener('click', () => {
-              accordion.classList.toggle('open');
+              // Activate the clicked button and corresponding panel
+              button.classList.add('active');
+              document.getElementById(button.dataset.tab).classList.add('active');
             });
+          });
 
-            //Initially open the first accordion.
-            if (promptData.prompt_id === 'prompt-1'){
-                accordion.classList.add('open');
-            }
-      }
+
+        // Event listener for accordion header
+        accordionHeader.addEventListener('click', () => {
+          accordion.classList.toggle('open');
+        });
+
+        // *** IMPORTANT CHANGES HERE ***
+
+        // 1. Open the accordion by default.
+        accordion.classList.add('open');
+
+        // 2. Simulate a click on the first tab *after* the content is rendered.
+        const firstTab = tabList.querySelector('.tab-button');
+        if (firstTab) {
+            firstTab.click();
+        }
+    }
 
       // 3. Event Listeners for View Toggle
       const accordionViewBtn = document.getElementById('accordion-view-btn');

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Model Output Comparison</title>
+  <style>
+    :root {
+      --primary-color: #3b82f6;
+      --bg-color: #f8fafc;
+      --text-color: #1e293b;
+      --border-color: #e2e8f0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.5;
+      color: var(--text-color);
+      background-color: var(--bg-color);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .prompt-list {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center; /* Center the prompt chips */
+    }
+
+    .prompt-chip {
+      background: white;
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+      user-select: none; /* Prevent text selection on click */
+    }
+
+    .prompt-chip:hover {
+      border-color: var(--primary-color);
+    }
+
+    .prompt-chip.active {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .accordion {
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      background: white;
+      overflow: hidden; /* Hide content when collapsed */
+    }
+
+    .accordion-header {
+      padding: 1rem 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid transparent; /* Invisible by default */
+      user-select: none;
+    }
+
+    .accordion-header:hover {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    .accordion-header .indicator {
+      transition: transform 0.3s;
+      font-size: 1.2em; /* Slightly larger indicator */
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      padding: 0; /* Remove default padding */
+    }
+   .accordion-content p {
+    padding: 1rem 1.5rem;
+   }
+
+
+    .accordion.open .accordion-header {
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .accordion.open .indicator {
+      transform: rotate(180deg);
+    }
+
+    .accordion.open .accordion-content {
+      max-height: 500vh; /* Use a very large value.  Better than estimating. */
+    }
+
+    .tabs {
+      padding: 0; /* Remove default padding */
+    }
+
+    .tab-list {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 0; /* Remove default margin */
+    }
+
+    .tab-button {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: none;
+      font-weight: 600;
+      cursor: pointer;
+      opacity: 0.7;
+      position: relative;
+      user-select: none;
+    }
+
+    .tab-button::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--primary-color);
+      transform: scaleX(0);
+      transition: transform 0.2s;
+    }
+
+    .tab-button.active {
+      opacity: 1;
+    }
+
+    .tab-button.active::after {
+      transform: scaleX(1);
+    }
+
+    .tab-panel {
+      display: none; /* Hidden by default */
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .view-toggle {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 1rem;
+    }
+
+    .view-toggle button {
+      background: white;
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .view-toggle button:hover {
+        background-color: rgba(0,0,0, 0.05);
+    }
+
+    .view-toggle button.active {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .side-by-side {
+      display: none; /* Hidden by default */
+      gap: 1rem;
+    }
+
+    .side-by-side.active {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .side-by-side .model-output {
+      background-color: #f0f4f8; /* Slightly different background */
+      padding: 1rem;
+      border-radius: 0.25rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .side-by-side .model-name {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--primary-color); /* Use primary color for model name */
+    }
+
+    /* Loading message */
+    #loading {
+      text-align: center;
+      margin-top: 2rem;
+      font-style: italic;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <h1>AI Model Output Comparison</h1>
+
+  <div class="view-toggle">
+    <button id="accordion-view-btn" class="active">Accordion View</button>
+    <button id="side-by-side-btn">Side-by-Side View</button>
+  </div>
+
+  <div class="prompt-list" id="prompt-list">
+    <!-- Prompt chips will be generated here -->
+  </div>
+
+  <div id="accordion-view">
+    <!-- Accordions will be generated here -->
+  </div>
+
+  <div id="side-by-side-view" class="side-by-side">
+    <!-- Side-by-side view will be generated here -->
+  </div>
+
+  <div id="loading">Loading content...</div>
+
+  <script>
+    // --- Utility Functions ---
+
+    // Create an element with attributes and text content
+    function createElement(tag, attributes = {}, textContent = '') {
+      const element = document.createElement(tag);
+      for (const key in attributes) {
+        element.setAttribute(key, attributes[key]);
+      }
+      element.textContent = textContent;
+      return element;
+    }
+
+    // --- Main Logic ---
+
+    fetch('content.json')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('loading').style.display = 'none'; // Hide loading message
+        renderContent(data);
+      })
+      .catch(error => {
+        console.error('Error fetching content:', error);
+        document.getElementById('loading').textContent = 'Error loading content. Please check the console and ensure content.json is accessible.';
+      });
+
+    function renderContent(data) {
+      const promptListDiv = document.getElementById('prompt-list');
+      const accordionViewDiv = document.getElementById('accordion-view');
+      const sideBySideViewDiv = document.getElementById('side-by-side-view');
+
+      // 1. Create Prompt Chips
+      data.forEach(promptData => {
+        const promptChip = createElement('button', {
+          'class': 'prompt-chip',
+          'data-prompt-id': promptData.prompt_id,
+        }, `Prompt ${promptData.prompt_id.replace('prompt-', '')}`);
+        promptListDiv.appendChild(promptChip);
+
+        promptChip.addEventListener('click', () => {
+            // Deactivate all chips, then activate the clicked one.
+            document.querySelectorAll('.prompt-chip').forEach(c => c.classList.remove('active'));
+            promptChip.classList.add('active');
+            renderPromptContent(promptData); // Render the content for the selected prompt
+        });
+
+      });
+
+        // Find and click the first prompt chip to make it active initially
+        const firstPromptChip = document.querySelector('.prompt-chip');
+        if (firstPromptChip) {
+            firstPromptChip.click();
+        }
+
+
+      // 2. Create Accordion and Side-by-Side Content (but don't display yet)
+        function renderPromptContent(promptData) {
+            // Clear previous content
+            accordionViewDiv.innerHTML = '';
+            sideBySideViewDiv.innerHTML = '';
+
+
+        const accordion = createElement('div', { 'class': 'accordion', 'data-prompt-id': promptData.prompt_id });
+        const accordionHeader = createElement('div', { 'class': 'accordion-header' });
+        const headerText = createElement('div', {}, `Prompt ${promptData.prompt_id.replace('prompt-', '')}: ${promptData.prompt_text}`);
+        const indicator = createElement('div', { 'class': 'indicator' }, '↓');
+
+        accordionHeader.appendChild(headerText);
+        accordionHeader.appendChild(indicator);
+        accordion.appendChild(accordionHeader);
+
+        const accordionContent = createElement('div', { 'class': 'accordion-content' });
+        const tabs = createElement('div', { 'class': 'tabs' });
+        const tabList = createElement('div', { 'class': 'tab-list' });
+        const tabPanels = document.createElement('div'); // Container for tab panels
+
+        accordionContent.appendChild(tabs);
+        tabs.appendChild(tabList);
+        tabs.appendChild(tabPanels);
+        accordion.appendChild(accordionContent);
+        accordionViewDiv.appendChild(accordion); // Add to the accordion view
+
+
+        // Create tabs and side-by-side content
+        promptData.responses.forEach(response => {
+          const modelName = response.model.toUpperCase().replace(/-/g, ' ');
+          const tabId = `${response.model}-${promptData.prompt_id}`;
+
+          // Tab button
+          const tabButton = createElement('button', {
+            'class': 'tab-button',
+            'data-tab': tabId
+          }, modelName);
+          tabList.appendChild(tabButton);
+
+          // Tab panel
+          const tabPanel = createElement('div', {
+            'class': 'tab-panel',
+            'id': tabId
+          });
+          tabPanel.innerHTML = `<p>${response.response_text.replace(/\n/g, '<br>')}</p>`;
+          tabPanels.appendChild(tabPanel); // Add to the tabPanels container
+
+
+
+          // Side-by-side content
+          const sideBySideOutput = createElement('div', { 'class': 'model-output' });
+          const modelNameDiv = createElement('div', { 'class': 'model-name' }, modelName);
+          const outputText = createElement('p', {}, '');
+          outputText.innerHTML = response.response_text.replace(/\n/g, '<br>');
+
+          sideBySideOutput.appendChild(modelNameDiv);
+          sideBySideOutput.appendChild(outputText);
+          sideBySideViewDiv.appendChild(sideBySideOutput);
+        });
+
+            // Event listeners for tabs (within the renderPromptContent function)
+            tabList.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => {
+                  // Deactivate all buttons and panels within the *current* accordion
+                  tabList.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                  tabPanels.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+
+                  // Activate the clicked button and corresponding panel
+                  button.classList.add('active');
+                  document.getElementById(button.dataset.tab).classList.add('active');
+                });
+              });
+
+            // Set the first tab as active by default.
+            const firstTab = tabList.querySelector('.tab-button');
+            if (firstTab) {
+                firstTab.click();
+            }
+
+            // Event listener for accordion header
+            accordionHeader.addEventListener('click', () => {
+              accordion.classList.toggle('open');
+            });
+
+            //Initially open the first accordion.
+            if (promptData.prompt_id === 'prompt-1'){
+                accordion.classList.add('open');
+            }
+      }
+
+      // 3. Event Listeners for View Toggle
+      const accordionViewBtn = document.getElementById('accordion-view-btn');
+      const sideBySideBtn = document.getElementById('side-by-side-btn');
+
+      accordionViewBtn.addEventListener('click', () => {
+        accordionViewBtn.classList.add('active');
+        sideBySideBtn.classList.remove('active');
+        accordionViewDiv.style.display = 'block';
+        sideBySideViewDiv.style.display = 'none';
+          //Find and click the first prompt chip.
+          const firstPromptChip = document.querySelector('.prompt-chip');
+          if (firstPromptChip) {
+              firstPromptChip.click();
+        }
+      });
+
+      sideBySideBtn.addEventListener('click', () => {
+        sideBySideBtn.classList.add('active');
+        accordionViewBtn.classList.remove('active');
+        accordionViewDiv.style.display = 'none';
+        sideBySideViewDiv.style.display = 'grid'; // Use grid for side-by-side
+          //Find and click the first prompt chip.
+          const firstPromptChip = document.querySelector('.prompt-chip');
+          if (firstPromptChip) {
+              firstPromptChip.click();
+        }
+      });
+
+    }
+
+  </script>
+</body>
+</html>
